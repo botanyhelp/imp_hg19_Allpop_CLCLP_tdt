@@ -1,0 +1,71 @@
+#
+# This is a Shiny web application. You can run the application by clicking
+# the 'Run App' button above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    http://shiny.rstudio.com/
+#
+
+library(shiny)
+library(qqman)
+library(dplyr)
+highlightedSnps<-c("rs145677414","rs145663603","rs145942463","rs146065087","rs146104244","rs146453317","rs146458139")
+# library(ggplot2)
+df_imp_hg19_Allpop_CLCLP_tdt<-read.csv("imp_hg19_Allpop_CLCLP_tdt.txt")
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+   
+   # Application title
+   titlePanel("imp_hg19_Allpop_CLCLP_tdt"),
+   
+   # Sidebar with a slider input for number of bins 
+   verticalLayout(
+      
+     selectInput("Chromosome", "Chromosome", c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8","9"="9","10"="10","11"="11","12"="12","13"="13","14"="14","15"="15","16"="16","17"="17","18"="18","19"="19","20"="20","21"="21","22"="22","23"="23")
+     ),
+     #actionButton("dataChromosome", "Update Plot"),
+     numericInput("Location", "Location", 1000000,1,200000000),
+     #actionButton("dataLocation", "Update Plot"),
+     #NonNumericselectInput("Flank_Size", "Flank_Size", c("100"="100", "1000"="1000", "10000"="10000", "100000"="100000", "1000000"="1000000"),100000),
+     numericInput("FlankSize", "FlankSize", 100000,100,1000000,10000),
+     #actionButton("dataFlankSize", "Update Plot"),
+     #NO actionButton("go", "Update Plot"),
+     # Show a plot of the generated distribution
+      plotOutput("qqmanPlot")
+      
+   )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+  #dataChromosome <- eventReactive(input$makemanhattanChromosome, {input$Chromosome})
+  #dataLocation <- eventReactive(input$makemanhattanLocation, {input$Location;})
+  #dataFlankSize <- eventReactive(input$makemanhattanFlankSize, {input$FlankSize})
+  #data <- eventReactive(input$go, {input$FlankSize})
+  #NO rv<-reactiveValues(data=list(input$Chromosome,input$Location,input$FlankSize))
+  #NO rv<-reactiveValues(data=list(8,1000000,10000))
+  output$qqmanPlot <- renderPlot({
+      # generate bins based on input$bins from ui.R
+      #x    <- faithful[, 2] 
+     
+     #bins <- seq(min(x), max(x), length.out = input$bins + 1)
+      
+      # draw the histogram with the specified number of bins
+      #hist(x, breaks = bins, col = 'darkgray', border = 'white')
+     #manhattan(df_imp_hg19_Allpop_CLCLP_tdt %>% filter(CHR==input$CHR),annotatePval = 0.005, annotateTop = TRUE,ylim = c(0, 10), col = c("blue4", "orange3"), suggestiveline = F, genomewideline = F)
+     #WORKS manhattan(df_imp_hg19_Allpop_CLCLP_tdt %>% filter(CHR==input$Chromosome),annotatePval = 0.000005, annotateTop = FALSE,ylim = c(0, 10), cex = 0.6,cex.axis = 0.9, col = c("blue4", "orange3"), suggestiveline = F, genomewideline = F)
+     #WORKS manhattan(df_imp_hg19_Allpop_CLCLP_tdt %>% filter(CHR==input$Chromosome),annotatePval = 0.000005, annotateTop = FALSE,ylim = c(0, 10), cex = 0.6,cex.axis = 0.9, col = c("blue4", "orange3"), suggestiveline = F, genomewideline = F,xlim=c(300000,900000))
+     #WORKS manhattan(df_imp_hg19_Allpop_CLCLP_tdt %>% filter(CHR==input$Chromosome),annotatePval = 0.000005, annotateTop = FALSE,ylim = c(0, 10), cex = 0.6,cex.axis = 0.9, col = c("blue4", "orange3"), suggestiveline = F, genomewideline = F,xlim=c(input$Location-500000,input$Location+500000))
+     #WORKS manhattan(df_imp_hg19_Allpop_CLCLP_tdt %>% filter(CHR==input$Chromosome),annotatePval = 0.000005, annotateTop = FALSE,ylim = c(0, 10), cex = 0.6,cex.axis = 0.9, col = c("blue4", "orange3"), suggestiveline = F, genomewideline = F,xlim=c(input$Location-input$FlankSize,input$Location+input$FlankSize))
+     #WORKSmanhattan(df_imp_hg19_Allpop_CLCLP_tdt %>% filter(CHR==input$Chromosome),annotatePval = 0.00005, annotateTop = FALSE,ylim = c(0, 10), cex = 0.6,cex.axis = 0.9, col = c("blue4", "orange3"), suggestiveline = F, genomewideline = F,xlim=c(input$Location-input$FlankSize,input$Location+input$FlankSize))
+     #WORKSmanhattan(df_imp_hg19_Allpop_CLCLP_tdt %>% filter(CHR==input$Chromosome),annotatePval = 0.00005, annotateTop = FALSE,ylim = c(0, 10), cex = 0.6,cex.axis = 0.9, col = c("blue4", "orange3"), suggestiveline = F, genomewideline = F,xlim=c(input$Location-input$FlankSize,input$Location+input$FlankSize),highlight=highlightedSnps)
+     #NOobserveEvent(input$go,{manhattan(df_imp_hg19_Allpop_CLCLP_tdt %>% filter(CHR==dataChromosome()),annotatePval = 0.00005, annotateTop = FALSE,ylim = c(0, 10), cex = 0.6,cex.axis = 0.9, col = c("blue4", "orange3"), suggestiveline = F, genomewideline = F,xlim=c(dataLocation()-dataFlankSize(),dataLocation()+dataFlankSize()),highlight=highlightedSnps)})
+    #NOobserveEvent(input$go,{manhattan(df_imp_hg19_Allpop_CLCLP_tdt %>% filter(CHR==rv$data[[1]]),annotatePval = 0.00005, annotateTop = FALSE,ylim = c(0, 10), cex = 0.6,cex.axis = 0.9, col = c("blue4", "orange3"), suggestiveline = F, genomewideline = F,xlim=c(rv$data[[2]]-rv$data[[3]],rv$data[[2]]+rv$data[[3]]),highlight=highlightedSnps)})
+    manhattan(df_imp_hg19_Allpop_CLCLP_tdt %>% filter(CHR==input$Chromosome),annotatePval = 0.00005, annotateTop = FALSE,ylim = c(0, 10), cex = 0.6,cex.axis = 0.9, col = c("blue4", "orange3"), suggestiveline = F, genomewideline = F,xlim=c(input$Location-input$FlankSize,input$Location+input$FlankSize),highlight=highlightedSnps)
+   })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+
